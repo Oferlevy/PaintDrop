@@ -19,7 +19,10 @@ public class PaintDrop extends JFrame{
 	/**
 	 * V1.0 got deleted
 	 * V1.1 better canvas save + editor
+	 * 
+	 * Authors: Ofer Levy, Nave Weksler
 	 */
+	
 	public final Edit edit;
 	private static final long serialVersionUID = 1L;
 	
