@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
-public class Canvas extends JPanel implements MouseListener, MouseMotionListener{
+public class Canvas extends JPanel implements MouseListener, MouseMotionListener {
 	private static final long serialVersionUID = 1L;
 	
 	ArrayList<int[]> positions = new ArrayList<int[]>();
@@ -23,20 +23,20 @@ public class Canvas extends JPanel implements MouseListener, MouseMotionListener
 	
 	Color color = Color.BLUE;
 	int lineSize = 4;
-	
-	
 
 	public Canvas() {
 		setBackground(Color.WHITE);
 		addMouseListener(this);
 		addMouseMotionListener(this);
-		
 	}
 	
 	@Override
 	public void mouseDragged(MouseEvent e) {
 		count++;
+		
 		if (count >= 1) {
+			count = 0;
+			
 			int size = positions.size();
 			int x = e.getX();
 			int y = e.getY();
@@ -55,9 +55,7 @@ public class Canvas extends JPanel implements MouseListener, MouseMotionListener
 		            g2d.drawLine(lp[0], lp[1], x, y);
 				}
 			}
-			
-			
-			count = 0;
+	
 		}
 	}
 	
@@ -71,21 +69,15 @@ public class Canvas extends JPanel implements MouseListener, MouseMotionListener
 		int len = positions.size();
 		int[] pointes = new int[len+2];
 		
-		pointes[0] =  color.getRGB(); //size | ( ((long) color.getRGB()) << 32);
+		pointes[0] =  color.getRGB();
 		pointes[1] = lineSize;
 		
-		//int to = pointes.length - 1;
 		for (int i = 0; i < len; i++) {
-			int[] one = positions.get(i);
-			//int[] two = positions.get(i+1);
-			
+			int[] one = positions.get(i);			
 			pointes[i + 2] = ((short) one[0]) | ( ((short) one[1]) << 16 );
 		}
-		lines.add(pointes);
 		
-		//int end = ((int) ((pointes[0] & 0xffffffff00000000l) >>> 32)); // + 
-		//int size = ((int) (pointes[0] & 0xffffffff));
-		
+		lines.add(pointes);	
 		positions.clear();
 	}
 	
