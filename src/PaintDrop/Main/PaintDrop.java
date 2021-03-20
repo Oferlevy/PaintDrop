@@ -1,8 +1,11 @@
 package PaintDrop.Main;
 
 import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -10,12 +13,13 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-public class PaintDrop extends JFrame {
+public class PaintDrop extends JFrame implements MouseListener {
 	 /*
 	 * V1.0 got deleted
 	 * V1.1 better canvas save + editor
@@ -38,7 +42,12 @@ public class PaintDrop extends JFrame {
 	 */
 	
 	private static final long serialVersionUID = 1L;
+	
 	public final Edit edit;
+	private JMenu editMenu;
+	private JMenu drawMenu;
+	private CardLayout cardLayout;
+	private JPanel CardPanel;
 
 	public static void main(String[] args) {
 		try {
@@ -46,7 +55,6 @@ public class PaintDrop extends JFrame {
 			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
 		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
 				| UnsupportedLookAndFeelException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
 		SwingUtilities.invokeLater(new Runnable() {
@@ -79,23 +87,44 @@ public class PaintDrop extends JFrame {
 		JMenuBar bar = new JMenuBar();
 		bar.setPreferredSize(new Dimension(Integer.MAX_VALUE, 30));
 		
-		JMenu file = new JMenu("File");
+		JMenu menu = new JMenu("File");
 		JMenuItem item;
 		item = new JMenuItem("New");
-		file.add(item);
+		menu.add(item);
 		
 		item = new JMenuItem("Open");
-		file.add(item);
+		menu.add(item);
 		
-		file.addSeparator();
+		menu.addSeparator();
 		item = new JMenuItem("Save");
-		file.add(item);
+		menu.add(item);
 		
 		item = new JMenuItem("Save As");
-		file.add(item);
+		menu.add(item);
 		
-		bar.add(file);
+		bar.add(menu);
 		
+		cardLayout = new CardLayout();
+		CardPanel = new JPanel(cardLayout);
+		CardPanel.setPreferredSize(new Dimension(Integer.MAX_VALUE, 50));
+		
+		JPanel drawPanel = new JPanel();
+		drawPanel.setBackground(Color.RED);
+		CardPanel.add(drawPanel, "draw");
+		
+		JPanel editPanel = new JPanel();
+		editPanel.setBackground(Color.GREEN);
+		CardPanel.add(editPanel, "edit");
+		
+		drawMenu = new JMenu("Draw");
+		drawMenu.addMouseListener(this);
+		bar.add(drawMenu);
+		
+		editMenu = new JMenu("Edit");
+		editMenu.addMouseListener(this);
+		bar.add(editMenu);
+		
+		add(CardPanel, BorderLayout.NORTH);
 		setJMenuBar(bar);
 		
 		edit = new Edit();
@@ -107,4 +136,28 @@ public class PaintDrop extends JFrame {
 		setVisible(true);
 		
 	}
+
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		JMenu act = (JMenu) e.getSource();
+		if (act == drawMenu) {
+			cardLayout.show(CardPanel, "draw");
+		} else if (act == editMenu) {
+			System.out.println("edit");
+			cardLayout.show(CardPanel, "edit");
+		}
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent arg0) {}
+
+	@Override
+	public void mouseExited(MouseEvent arg0) {}
+
+	@Override
+	public void mousePressed(MouseEvent arg0) {}
+
+	@Override
+	public void mouseReleased(MouseEvent arg0) {}
 }

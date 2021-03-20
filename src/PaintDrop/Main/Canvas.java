@@ -103,7 +103,7 @@ public class Canvas extends JPanel implements MouseListener, MouseMotionListener
 		
 	}
 
-	@Override
+	@Override 
 	public Dimension getPreferredSize() {
 		return Toolkit.getDefaultToolkit().getScreenSize();
 	}
