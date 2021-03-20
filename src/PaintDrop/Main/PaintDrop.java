@@ -76,6 +76,7 @@ public class PaintDrop extends JFrame implements MouseListener {
 	
 	public PaintDrop() {
 		edit = new Edit();
+		// the message on close are you sure you want to exit
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		addWindowListener(new java.awt.event.WindowAdapter() {
 	        @Override
@@ -85,6 +86,7 @@ public class PaintDrop extends JFrame implements MouseListener {
 	        	}
 	        }
 	    });
+		
 		setLocationRelativeTo(null);
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
 		setSize(500, 500);
@@ -94,6 +96,7 @@ public class PaintDrop extends JFrame implements MouseListener {
 		ImageIcon img = new ImageIcon("paint-drop-icon.png");
 		setIconImage(img.getImage());
 		
+
 		JMenuBar bar = new JMenuBar();
 		bar.setPreferredSize(new Dimension(Integer.MAX_VALUE, 30));
 		
@@ -113,14 +116,16 @@ public class PaintDrop extends JFrame implements MouseListener {
 		menu.add(item);
 		bar.add(menu);
 		
+		// Edit & Draw panels switch using CardLayout
 		cardLayout = new CardLayout();
 		CardPanel = new JPanel(cardLayout);
 		CardPanel.setPreferredSize(new Dimension(Integer.MAX_VALUE, 50));
 		
 		JPanel drawPanel = new JPanel();
 		drawPanel.setBackground(new Color(240,240,240));
-		CardPanel.add(drawPanel, "draw");
+		CardPanel.add(drawPanel, "draw"); // adding the drawPanel as "draw"
 		drawPanel.setLayout(new GridLayout(2, 80));
+		
 		JButton setColor = new JButton("Color");
 		setColor.addActionListener(e -> {
 			Color c = JColorChooser.showDialog(this,"Select a color",Color.BLACK);
@@ -157,7 +162,7 @@ public class PaintDrop extends JFrame implements MouseListener {
 		
 		JPanel editPanel = new JPanel();
 		editPanel.setBackground(new Color(240, 240, 240));
-		CardPanel.add(editPanel, "edit");
+		CardPanel.add(editPanel, "edit"); // adding the editPanel as "edit"
 		editPanel.setLayout(new GridLayout(2, 8));
 		
 		JButton selectArea = new JButton("Select");
@@ -168,6 +173,26 @@ public class PaintDrop extends JFrame implements MouseListener {
 			edit.getCanvas().drawSelectRect = true;
 		});
 		editPanel.add(selectArea);
+		
+		//button to call the Edit.filter
+		JButton filterArea = new JButton("Filter");
+		filterArea.setContentAreaFilled(false);
+		filterArea.setBorder( BorderFactory.createLineBorder(new Color(170, 170, 190), 1) );
+		filterArea.addActionListener(e -> {
+			//get color to remove and color to replace
+			Color rev = JColorChooser.showDialog(this,"Select color to remove",Color.BLACK);
+			Color rep = JColorChooser.showDialog(this,"Select color to replace",Color.BLACK);
+			
+			Canvas canvas = edit.getCanvas();
+			// if the user selected a box
+			if (canvas.selectRect[0] != 0 || canvas.selectRect[1] != 0 ||
+					canvas.selectRect[2] != 0 || canvas.selectRect[3] != 0) {
+				System.out.println("AAAA");
+				edit.filter(canvas.selectRect[0], canvas.selectRect[1], canvas.selectRect[2],
+						canvas.selectRect[3], rev, rep);
+			}
+		});
+		editPanel.add(filterArea);
 		
 		drawMenu = new JMenu("Draw");
 		drawMenu.addMouseListener(this);
@@ -180,22 +205,25 @@ public class PaintDrop extends JFrame implements MouseListener {
 		add(CardPanel, BorderLayout.NORTH);
 		setJMenuBar(bar);
 		
-		
+		// add scrolling to the canvas
 		JScrollPane scroll = new JScrollPane(edit.getCanvas());
 		scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);  
 		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		
 		add(scroll);
+		
 		setVisible(true);
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
+		// click on JMenu draw / edit
 		JMenu act = (JMenu) e.getSource();
 		if (act == drawMenu) {
+			// show the "draw" panel of the CardLayout above (DrawPanel)
 			cardLayout.show(CardPanel, "draw");
 			edit.getCanvas().drawSelectRect = false;
 		} else if (act == editMenu) {
+			// show the "edit" panel of the CardLayout above (editPanel)
 			System.out.println("edit");
 			cardLayout.show(CardPanel, "edit");
 		}
@@ -203,13 +231,10 @@ public class PaintDrop extends JFrame implements MouseListener {
 
 	@Override
 	public void mouseEntered(MouseEvent arg0) {}
-
 	@Override
 	public void mouseExited(MouseEvent arg0) {}
-
 	@Override
 	public void mousePressed(MouseEvent arg0) {}
-
 	@Override
 	public void mouseReleased(MouseEvent arg0) {}
 }

@@ -42,13 +42,14 @@ public class Canvas extends JPanel implements MouseListener, MouseMotionListener
 	@Override
 	public void mouseDragged(MouseEvent e) {
 		count++;
-		if (count >= 1) {
+		if (count >= 2) { // counter adds after one time to make the line look better
 			count = 0;
 			if (!drawSelectRect) {
 				int size = positions.size();
 				int x = e.getX();
 				int y = e.getY();
 				
+				// check if the point is not the same as last one and if positions should add the point
 				if (size > 1 && (x != positions.get(size - 1)[0] || y != positions.get(size - 1)[1])) {
 					positions.add(new int[]{ x, y });
 					Graphics2D g2d = (Graphics2D) getGraphics();
@@ -61,13 +62,15 @@ public class Canvas extends JPanel implements MouseListener, MouseMotionListener
 				else if (size <= 1) {
 					positions.add(new int[]{ x, y });
 				}
-			}else if (clickPos[0] == 0 && clickPos[1] == 0){
+			}else if (clickPos[0] == 0 && clickPos[1] == 0){ 
+				// MousePressed does not get called every time so if it does not to that in here
 				clickPos = new int[] {e.getX(), e.getY()};
 				selectRect[0] = clickPos[0];
 				selectRect[1] = clickPos[1];
 				selectRect[2] = clickPos[0] + 2;
 				selectRect[3] = clickPos[1] + 2;
 			}else {
+				// change the rect adds width and height and rotate the rect if needed
 				int x = e.getX();
 				int y = e.getY();
 				
@@ -93,6 +96,7 @@ public class Canvas extends JPanel implements MouseListener, MouseMotionListener
 	
 	@Override
 	public void mousePressed(MouseEvent e) {
+		// on first click - does not get called always due to UImanger setLookAndFeel windows
 		int[] click = new int[] {e.getX(), e.getY()};
 		if (drawSelectRect) {
 			clickPos = click;
@@ -108,19 +112,23 @@ public class Canvas extends JPanel implements MouseListener, MouseMotionListener
 
 	@Override
 	public void mouseReleased(MouseEvent arg0) {
-		int len = positions.size();
-		int[] pointes = new int[len+2];
-		
-		pointes[0] =  color.getRGB();
-		pointes[1] = lineSize;
-		
-		for (int i = 0; i < len; i++) {
-			int[] one = positions.get(i);			
-			pointes[i + 2] = ((short) one[0]) | ( ((short) one[1]) << 16 );
-		}
-		
-		lines.add(pointes);	
-		positions.clear();
+		// save the last line as int array. every int is x,y packed
+		if (!drawSelectRect) {
+			int len = positions.size();
+			int[] pointes = new int[len+2];
+			
+			pointes[0] =  color.getRGB();
+			pointes[1] = lineSize;
+			
+			for (int i = 0; i < len; i++) {
+				int[] one = positions.get(i);
+				// pack the x,y to the int
+				pointes[i + 2] = ((short) one[0]) | ( ((short) one[1]) << 16 ); 
+			}
+			
+			lines.add(pointes);	
+			positions.clear();
+		}	
 	}
 	
 	@Override
@@ -133,9 +141,17 @@ public class Canvas extends JPanel implements MouseListener, MouseMotionListener
 			g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			g2d.setColor(new Color(line[0]));
 			for (int i = 2; i < line.length-1; i++) {
+				// unpack both x,y of the two ints and draw a line
 				g2d.drawLine((line[i] & 0xffff), ((line[i] & 0xffff0000) >> 16), (line[i + 1] & 0xffff), ((line[i + 1] & 0xffff0000) >> 16));
 			}
 		}
+		/*
+		for (Long[] pixelsArr : pixels) {
+			for (Long pixel : pixelsArr) {
+				
+			}
+			
+		}*/
 		
 		if (drawSelectRect) {
 			g2d.setStroke(new BasicStroke(2, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER));
