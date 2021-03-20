@@ -17,7 +17,7 @@ public class Edit {
 	
 	// Filter pixels of canvas
 	public void filter(int x, int y, int width, int height, Color colorToRemove, Color replaceColor) {
-		new Thread(new Runnable() {	
+		new Thread(new Runnable() {
 			@Override
 			public void run() {
 				// Gets an image of the canvas
