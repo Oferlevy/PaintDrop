@@ -45,22 +45,19 @@ public class Canvas extends JPanel implements MouseListener, MouseMotionListener
 			int size = positions.size();
 			int x = e.getX();
 			int y = e.getY();
-			if (x != positions.get(size-1)[0] || y != positions.get(size-1)[1]) {
-				positions.add(new int[] {x, y});
-				if (size > 1) {
-					Graphics2D g2d = (Graphics2D) getGraphics();
-					//BasicStroke stroke =
-		            g2d.setStroke( new BasicStroke(lineSize, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND) );
-		            g2d.setRenderingHint(
-		                    RenderingHints.KEY_ANTIALIASING,
-		                    RenderingHints.VALUE_ANTIALIAS_ON);
-		            g2d.setColor(color);
-		            
-		            int[] lp = positions.get(size - 2);
-		            g2d.drawLine(lp[0], lp[1], x, y);
-				}
+			
+			if (size > 1 && (x != positions.get(size - 1)[0] || y != positions.get(size - 1)[1])) {
+				positions.add(new int[]{ x, y });
+				Graphics2D g2d = (Graphics2D) getGraphics();
+	            g2d.setStroke( new BasicStroke(lineSize, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND) );
+	            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+	            g2d.setColor(color);
+	            int[] lp = positions.get(size - 2);
+	            g2d.drawLine(lp[0], lp[1], x, y);
 			}
-	
+			else if (size <= 1) {
+				positions.add(new int[]{ x, y });
+			}
 		}
 	}
 	
@@ -96,11 +93,9 @@ public class Canvas extends JPanel implements MouseListener, MouseMotionListener
 			g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			g2d.setColor(new Color(line[0]));
 			for (int i = 2; i < line.length-1; i++) {
-				g2d.drawLine( (line[i] & 0xffff), ((line[i] & 0xffff0000) >> 16),
-						(line[i + 1] & 0xffff), ((line[i + 1] & 0xffff0000) >> 16));
+				g2d.drawLine((line[i] & 0xffff), ((line[i] & 0xffff0000) >> 16), (line[i + 1] & 0xffff), ((line[i + 1] & 0xffff0000) >> 16));
 			}
-		}
-		
+		}	
 	}
 
 	@Override 
@@ -115,7 +110,6 @@ public class Canvas extends JPanel implements MouseListener, MouseMotionListener
 	@Override
 	public void mouseEntered(MouseEvent arg0) {}
 	@Override
-	public void mouseExited(MouseEvent arg0) {}
-	
+	public void mouseExited(MouseEvent arg0) {}	
 }
 
