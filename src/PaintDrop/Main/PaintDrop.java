@@ -4,10 +4,16 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JColorChooser;
+import javax.swing.JComponent;
+import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -15,9 +21,13 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSpinner;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.text.DefaultFormatter;
 
 public class PaintDrop extends JFrame implements MouseListener {
 	 /*
@@ -64,6 +74,7 @@ public class PaintDrop extends JFrame implements MouseListener {
 	}
 	
 	public PaintDrop() {
+		edit = new Edit();
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		addWindowListener(new java.awt.event.WindowAdapter() {
 	        @Override
@@ -73,7 +84,7 @@ public class PaintDrop extends JFrame implements MouseListener {
 	        	}
 	        }
 	    });
-		
+		setLocationRelativeTo(null);
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
 		setSize(500, 500);
 		getContentPane().setBackground(Color.WHITE);
@@ -107,12 +118,51 @@ public class PaintDrop extends JFrame implements MouseListener {
 		CardPanel.setPreferredSize(new Dimension(Integer.MAX_VALUE, 50));
 		
 		JPanel drawPanel = new JPanel();
-		drawPanel.setBackground(Color.RED);
+		drawPanel.setBackground(new Color(240,240,240));
 		CardPanel.add(drawPanel, "draw");
+		drawPanel.setLayout(new GridLayout(2, 80));
+		JButton setColor = new JButton("Color");
+		setColor.addActionListener(e -> {
+			edit.getCanvas().color = JColorChooser.showDialog(this,"Select a color",Color.BLACK);
+		});
+		
+		setColor.setFocusPainted(false);
+		setColor.setContentAreaFilled(false);
+		setColor.setBorder( BorderFactory.createLineBorder(new Color(200, 200, 200), 5) );
+		setColor.setPreferredSize(new Dimension(10,10));
+		
+		//JButton setSize = new JButton("Size");
+		//setColor.addActionListener(e -> {
+			//edit.getCanvas().color = JColorChooser.showDialog(this,"Select a color",Color.BLACK);
+		//});
+		
+		
+		
+		final JSpinner setSize = new JSpinner();
+		setSize.setValue(4);
+		JComponent comp = setSize.getEditor();
+		JFormattedTextField field = (JFormattedTextField) comp.getComponent(0);
+		DefaultFormatter formatter = (DefaultFormatter) field.getFormatter();
+		formatter.setCommitsOnValidEdit(true);
+		setSize.addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				edit.getCanvas().lineSize = (int) setSize.getValue();
+			}
+		});
+		    
+		setSize.setBorder( BorderFactory.createLineBorder(Color.BLACK, 1) );
+		setSize.setPreferredSize(new Dimension(10,10));
+			
+		drawPanel.add(setSize);
+		drawPanel.add(setColor);
+		
 		
 		JPanel editPanel = new JPanel();
 		editPanel.setBackground(Color.GREEN);
 		CardPanel.add(editPanel, "edit");
+		
+		
 		
 		drawMenu = new JMenu("Draw");
 		drawMenu.addMouseListener(this);
@@ -125,7 +175,7 @@ public class PaintDrop extends JFrame implements MouseListener {
 		add(CardPanel, BorderLayout.NORTH);
 		setJMenuBar(bar);
 		
-		edit = new Edit();
+		
 		JScrollPane scroll = new JScrollPane(edit.getCanvas());
 		scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);  
 		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
