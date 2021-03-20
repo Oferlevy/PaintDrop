@@ -7,6 +7,7 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.WindowEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -52,7 +53,7 @@ public class PaintDrop extends JFrame implements MouseListener {
 	
 	private static final long serialVersionUID = 1L;
 	
-	public final Edit edit;
+	public Edit edit;
 	private JMenu editMenu;
 	private JMenu drawMenu;
 	private CardLayout cardLayout;
@@ -64,7 +65,7 @@ public class PaintDrop extends JFrame implements MouseListener {
 		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
 				| UnsupportedLookAndFeelException e) {
 			e.printStackTrace();
-		} 
+		}
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
@@ -78,8 +79,8 @@ public class PaintDrop extends JFrame implements MouseListener {
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		addWindowListener(new java.awt.event.WindowAdapter() {
 	        @Override
-	        public void windowClosing(java.awt.event.WindowEvent windowEvent) {
-	        	if (JOptionPane.showConfirmDialog(null, "Are You Sure You Want to Exit","Warning", JOptionPane.YES_NO_OPTION) ==  JOptionPane.YES_OPTION) {
+	        public void windowClosing(WindowEvent windowEvent) {
+	        	if (JOptionPane.showConfirmDialog(null, "Are You Sure You Want to Exit", "Warning", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 	        		System.exit(1);
 	        	}
 	        }
@@ -186,9 +187,7 @@ public class PaintDrop extends JFrame implements MouseListener {
 		
 		add(scroll);
 		setVisible(true);
-		
 	}
-
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
