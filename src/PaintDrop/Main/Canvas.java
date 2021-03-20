@@ -38,7 +38,7 @@ public class Canvas extends JPanel implements MouseListener, MouseMotionListener
 	@Override
 	public void mouseDragged(MouseEvent e) {
 		count++;
-		
+
 		if (count >= 1) {
 			count = 0;
 			
@@ -92,7 +92,7 @@ public class Canvas extends JPanel implements MouseListener, MouseMotionListener
 			g2d.setStroke(new BasicStroke(line[1], BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
 			g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			g2d.setColor(new Color(line[0]));
-			for (int i = 2; i < line.length-1; i++) {
+			for (int i = 2; i < line.length - 1; i++) {
 				g2d.drawLine((line[i] & 0xffff), ((line[i] & 0xffff0000) >> 16), (line[i + 1] & 0xffff), ((line[i + 1] & 0xffff0000) >> 16));
 			}
 		}	
@@ -112,4 +112,3 @@ public class Canvas extends JPanel implements MouseListener, MouseMotionListener
 	@Override
 	public void mouseExited(MouseEvent arg0) {}	
 }
-
