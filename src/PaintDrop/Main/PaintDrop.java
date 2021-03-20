@@ -110,7 +110,6 @@ public class PaintDrop extends JFrame implements MouseListener {
 		
 		item = new JMenuItem("Save As");
 		menu.add(item);
-		
 		bar.add(menu);
 		
 		cardLayout = new CardLayout();
@@ -130,13 +129,6 @@ public class PaintDrop extends JFrame implements MouseListener {
 		setColor.setContentAreaFilled(false);
 		setColor.setBorder( BorderFactory.createLineBorder(new Color(200, 200, 200), 5) );
 		setColor.setPreferredSize(new Dimension(10,10));
-		
-		//JButton setSize = new JButton("Size");
-		//setColor.addActionListener(e -> {
-			//edit.getCanvas().color = JColorChooser.showDialog(this,"Select a color",Color.BLACK);
-		//});
-		
-		
 		
 		final JSpinner setSize = new JSpinner();
 		setSize.setValue(4);
@@ -161,8 +153,6 @@ public class PaintDrop extends JFrame implements MouseListener {
 		JPanel editPanel = new JPanel();
 		editPanel.setBackground(Color.GREEN);
 		CardPanel.add(editPanel, "edit");
-		
-		
 		
 		drawMenu = new JMenu("Draw");
 		drawMenu.addMouseListener(this);
