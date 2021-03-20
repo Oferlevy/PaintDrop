@@ -31,7 +31,6 @@ public class PaintDrop extends JFrame implements MouseListener {
 	 * send only the file you worked on to GitHub
 	 * make sure the code is working and written well before sending it
 	 * post an issue if your code doesn't work and don't change the main brunch
-	 * post in the README the last changes you made
 	 * in order to test something, do it in package PaintDrop.Tests and don't write it in the README
 	 * 
 	 * Syntax Rules:
