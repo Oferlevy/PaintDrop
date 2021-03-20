@@ -122,7 +122,11 @@ public class PaintDrop extends JFrame implements MouseListener {
 		drawPanel.setLayout(new GridLayout(2, 80));
 		JButton setColor = new JButton("Color");
 		setColor.addActionListener(e -> {
-			edit.getCanvas().color = JColorChooser.showDialog(this,"Select a color",Color.BLACK);
+			Color c = JColorChooser.showDialog(this,"Select a color",Color.BLACK);
+			if (c != null) {
+				edit.getCanvas().color = c;
+			}
+			
 		});
 		
 		setColor.setFocusPainted(false);
@@ -151,8 +155,18 @@ public class PaintDrop extends JFrame implements MouseListener {
 		
 		
 		JPanel editPanel = new JPanel();
-		editPanel.setBackground(Color.GREEN);
+		editPanel.setBackground(new Color(240, 240, 240));
 		CardPanel.add(editPanel, "edit");
+		editPanel.setLayout(new GridLayout(2, 8));
+		
+		JButton selectArea = new JButton("Select");
+		//selectArea.setFocusPainted(false);
+		selectArea.setContentAreaFilled(false);
+		selectArea.setBorder( BorderFactory.createLineBorder(new Color(170, 170, 190), 2) );
+		selectArea.addActionListener(e -> {
+			edit.getCanvas().drawSelectRect = true;
+		});
+		editPanel.add(selectArea);
 		
 		drawMenu = new JMenu("Draw");
 		drawMenu.addMouseListener(this);
@@ -181,6 +195,7 @@ public class PaintDrop extends JFrame implements MouseListener {
 		JMenu act = (JMenu) e.getSource();
 		if (act == drawMenu) {
 			cardLayout.show(CardPanel, "draw");
+			edit.getCanvas().drawSelectRect = false;
 		} else if (act == editMenu) {
 			System.out.println("edit");
 			cardLayout.show(CardPanel, "edit");

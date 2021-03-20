@@ -25,6 +25,10 @@ public class Canvas extends JPanel implements MouseListener, MouseMotionListener
 	Color color = Color.BLUE;
 	int lineSize = 4;
 
+	public boolean drawSelectRect;
+	public int[] selectRect = new int[4];
+	public int[] clickPos = new int[2];
+
 	public Canvas() {
 		setBackground(Color.WHITE);
 		addMouseListener(this);
@@ -38,32 +42,68 @@ public class Canvas extends JPanel implements MouseListener, MouseMotionListener
 	@Override
 	public void mouseDragged(MouseEvent e) {
 		count++;
-		
 		if (count >= 1) {
 			count = 0;
-			
-			int size = positions.size();
-			int x = e.getX();
-			int y = e.getY();
-			
-			if (size > 1 && (x != positions.get(size - 1)[0] || y != positions.get(size - 1)[1])) {
-				positions.add(new int[]{ x, y });
-				Graphics2D g2d = (Graphics2D) getGraphics();
-	            g2d.setStroke( new BasicStroke(lineSize, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND) );
-	            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-	            g2d.setColor(color);
-	            int[] lp = positions.get(size - 2);
-	            g2d.drawLine(lp[0], lp[1], x, y);
-			}
-			else if (size <= 1) {
-				positions.add(new int[]{ x, y });
+			if (!drawSelectRect) {
+				int size = positions.size();
+				int x = e.getX();
+				int y = e.getY();
+				
+				if (size > 1 && (x != positions.get(size - 1)[0] || y != positions.get(size - 1)[1])) {
+					positions.add(new int[]{ x, y });
+					Graphics2D g2d = (Graphics2D) getGraphics();
+		            g2d.setStroke( new BasicStroke(lineSize, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND) );
+		            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		            g2d.setColor(color);
+		            int[] lp = positions.get(size - 2);
+		            g2d.drawLine(lp[0], lp[1], x, y);
+				}
+				else if (size <= 1) {
+					positions.add(new int[]{ x, y });
+				}
+			}else if (clickPos[0] == 0 && clickPos[1] == 0){
+				clickPos = new int[] {e.getX(), e.getY()};
+				selectRect[0] = clickPos[0];
+				selectRect[1] = clickPos[1];
+				selectRect[2] = clickPos[0] + 2;
+				selectRect[3] = clickPos[1] + 2;
+			}else {
+				int x = e.getX();
+				int y = e.getY();
+				
+				if (x < clickPos[0]) {
+					selectRect[0] = x;
+					selectRect[2] = clickPos[0] - x;
+				}else if (x > clickPos[0]) {
+					selectRect[2] = x - clickPos[0];
+				}
+				
+				if (y < clickPos[1]) {
+					selectRect[1] = y;
+					selectRect[3] = clickPos[1] - y;
+				}else if (y > clickPos[1]) {
+					selectRect[3] = y - clickPos[1];
+				}
+				repaint();
+				
 			}
 		}
+		
 	}
 	
 	@Override
 	public void mousePressed(MouseEvent e) {
-		positions.add(new int[] {e.getX(), e.getY()});
+		int[] click = new int[] {e.getX(), e.getY()};
+		if (drawSelectRect) {
+			clickPos = click;
+			selectRect[0] = clickPos[0];
+			selectRect[1] = clickPos[1];
+			selectRect[2] = clickPos[0] + 2;
+			selectRect[3] = clickPos[1] + 2;
+		}else {
+			positions.add(click);
+		}
+		
 	}
 
 	@Override
@@ -95,7 +135,13 @@ public class Canvas extends JPanel implements MouseListener, MouseMotionListener
 			for (int i = 2; i < line.length-1; i++) {
 				g2d.drawLine((line[i] & 0xffff), ((line[i] & 0xffff0000) >> 16), (line[i + 1] & 0xffff), ((line[i + 1] & 0xffff0000) >> 16));
 			}
-		}	
+		}
+		
+		if (drawSelectRect) {
+			g2d.setStroke(new BasicStroke(2, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER));
+			g2d.setColor(Color.BLACK);
+			g2d.drawRect(selectRect[0], selectRect[1], selectRect[2], selectRect[3]);
+		}
 	}
 
 	@Override 
