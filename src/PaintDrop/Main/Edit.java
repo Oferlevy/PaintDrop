@@ -43,6 +43,6 @@ public class Edit {
 				pixelsAsArray = pixels.toArray(pixelsAsArray);		
 				canvas.getPixels().add(pixelsAsArray);
 			}
-		}).start();	
+		}).start();
 	}
 }

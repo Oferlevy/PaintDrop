@@ -49,7 +49,7 @@ public class Canvas extends JPanel implements MouseListener, MouseMotionListener
 				positions.add(new int[] {x, y});
 				if (size > 1) {
 					Graphics2D g2d = (Graphics2D) getGraphics();
-					//BasicStroke stroke = 
+					//BasicStroke stroke =
 		            g2d.setStroke( new BasicStroke(lineSize, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND) );
 		            g2d.setRenderingHint(
 		                    RenderingHints.KEY_ANTIALIASING,
