@@ -5,7 +5,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 public class Edit {
-	private final Canvas canvas;
+	private Canvas canvas;
 	
 	public Edit() {
 		canvas = new Canvas();
@@ -24,6 +24,7 @@ public class Edit {
 				BufferedImage image = new BufferedImage(canvas.getWidth(), canvas.getHeight(), BufferedImage.TYPE_INT_RGB);
 				canvas.paint(image.getGraphics());
 				
+				// creating an array of pixels, where each pixel is a long
 				ArrayList<Long> pixels = new ArrayList<Long>();
 				
 				for (int x_ = 0; x_ < width; x_++) {	
