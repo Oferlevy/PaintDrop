@@ -37,8 +37,8 @@ public class PaintDrop extends JFrame {
 	 * remove unused imports
 	 */
 	
-	public final Edit edit;
 	private static final long serialVersionUID = 1L;
+	public final Edit edit;
 
 	public static void main(String[] args) {
 		try {

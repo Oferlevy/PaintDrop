@@ -17,8 +17,9 @@ import javax.swing.JPanel;
 public class Canvas extends JPanel implements MouseListener, MouseMotionListener {
 	private static final long serialVersionUID = 1L;
 	
-	ArrayList<int[]> positions = new ArrayList<int[]>();
-	ArrayList<int[]> lines = new ArrayList<int[]>();
+	private ArrayList<int[]> positions = new ArrayList<int[]>();
+	private ArrayList<int[]> lines = new ArrayList<int[]>();
+	private ArrayList<Long[]> pixels = new ArrayList<Long[]>();
 	private short count = 0;
 	
 	Color color = Color.BLUE;
@@ -28,6 +29,10 @@ public class Canvas extends JPanel implements MouseListener, MouseMotionListener
 		setBackground(Color.WHITE);
 		addMouseListener(this);
 		addMouseMotionListener(this);
+	}
+	
+	public ArrayList<Long[]> getPixels() {
+		return pixels;
 	}
 	
 	@Override
