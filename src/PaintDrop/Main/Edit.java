@@ -24,8 +24,10 @@ public class Edit {
 				
 				for (int x_ = 0; x_ < width; x_++) {	
 					for (int y_ = 0; y_ < height; y_++) {
+						// Compare the RGB value of the colors
 						if ((img.getRGB(x + x_, y + y_) & 0xffffff) == (colorToRemove.getRGB() & 0xffffff)) {
-							Pixel pixel = new Pixel(x + x_, y + y_, replaceColor);
+							Pixel pixel = new Pixel(x + x_, y + y_, new Color(replaceColor.getRed(), replaceColor.getGreen(),
+													replaceColor.getRed(), colorToRemove.getAlpha()));
 							canvas.setPixelsArr(pixel);
 						}
 					}
