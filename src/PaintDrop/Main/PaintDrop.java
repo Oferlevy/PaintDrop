@@ -8,6 +8,7 @@ import java.awt.GridLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -209,7 +210,8 @@ public class PaintDrop extends JFrame implements MouseListener {
 		JScrollPane scroll = new JScrollPane(edit.getCanvas());
 		scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);  
 		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		add(scroll);
+		add(scroll, BorderLayout.CENTER);
+		edit.getCanvas().create(edit.getCanvas().getPreferredSize());
 		
 		setVisible(true);
 	}

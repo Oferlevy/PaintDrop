@@ -10,6 +10,7 @@ import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import javax.swing.JPanel;
@@ -19,7 +20,8 @@ public class Canvas extends JPanel implements MouseListener, MouseMotionListener
 	
 	private ArrayList<int[]> positions = new ArrayList<int[]>();
 	private ArrayList<int[]> lines = new ArrayList<int[]>();
-	private ArrayList<Long[]> pixels = new ArrayList<Long[]>();
+	private ArrayList<Long[]> changedPixels = new ArrayList<Long[]>();
+	private BufferedImage pixels;
 	private short count = 0;
 	
 	Color color = Color.BLUE;
@@ -33,9 +35,22 @@ public class Canvas extends JPanel implements MouseListener, MouseMotionListener
 		setBackground(Color.WHITE);
 		addMouseListener(this);
 		addMouseMotionListener(this);
+		//System.out.println(getWidth() + " a " + getHeight());
+		
 	}
 	
-	public ArrayList<Long[]> getPixels() {
+	public void create(Dimension wh) {
+		System.out.println(wh + " X " + (int)wh.getWidth() + " X " + (int)wh.getWidth());
+		pixels = new BufferedImage((int)wh.getWidth(),(int)wh.getHeight(), BufferedImage.TYPE_INT_RGB);
+		paint(pixels.getGraphics());
+	}
+	
+	public void setPixelsArr(Long[] arr) {
+		changedPixels.add(arr);
+		
+	}
+	
+	public BufferedImage getPixels() {
 		return pixels;
 	}
 	
@@ -52,12 +67,14 @@ public class Canvas extends JPanel implements MouseListener, MouseMotionListener
 				// check if the point is not the same as last one and if positions should add the point
 				if (size > 1 && (x != positions.get(size - 1)[0] || y != positions.get(size - 1)[1])) {
 					positions.add(new int[]{ x, y });
-					Graphics2D g2d = (Graphics2D) getGraphics();
-		            g2d.setStroke( new BasicStroke(lineSize, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND) );
-		            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		            g2d.setColor(color);
-		            int[] lp = positions.get(size - 2);
-		            g2d.drawLine(lp[0], lp[1], x, y);
+					
+					//Graphics2D g2d = pixels.createGraphics();
+		            //g2d.setStroke( new BasicStroke(lineSize, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND) );
+		            //g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		            //g2d.setColor(color);
+		            //int[] lp = positions.get(size - 2);
+		            //g2d.drawLine(lp[0], lp[1], x, y);
+		            repaint();
 				}
 				else if (size <= 1) {
 					positions.add(new int[]{ x, y });
@@ -134,8 +151,25 @@ public class Canvas extends JPanel implements MouseListener, MouseMotionListener
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
+		Graphics2D g2d = pixels.createGraphics();
+		Dimension size = getPreferredSize();
+		g2d.setColor(Color.WHITE);
+		g2d.fillRect(0, 0, size.width,  size.height);
 		
-		Graphics2D g2d = (Graphics2D) g;
+        g2d.setStroke( new BasicStroke(lineSize, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND) );
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2d.setColor(color);
+        int psize = positions.size();
+        for (int i = 0; i < psize-1; i++) {
+        	int[] np = positions.get(i + 1);
+	        int[] lp = positions.get(i);
+	        g2d.drawLine(lp[0], lp[1], np[0], np[1]);
+        }
+       
+		
+		
+		
+		//Graphics2D g2d = (Graphics2D) pixels.createGraphics();
 		for (int[] line : lines) {
 			g2d.setStroke(new BasicStroke(line[1], BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
 			g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -145,19 +179,19 @@ public class Canvas extends JPanel implements MouseListener, MouseMotionListener
 				g2d.drawLine((line[i] & 0xffff), ((line[i] & 0xffff0000) >> 16), (line[i + 1] & 0xffff), ((line[i + 1] & 0xffff0000) >> 16));
 			}
 		}
-		/*
-		for (Long[] pixelsArr : pixels) {
-			for (Long pixel : pixelsArr) {
-				
-			}
-			
-		}*/
+		
 		
 		if (drawSelectRect) {
 			g2d.setStroke(new BasicStroke(2, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER));
 			g2d.setColor(Color.BLACK);
 			g2d.drawRect(selectRect[0], selectRect[1], selectRect[2], selectRect[3]);
 		}
+		
+		
+		g.drawImage(pixels, 0, 0, this);
+		g2d.dispose();
+		
+		
 	}
 
 	@Override 
