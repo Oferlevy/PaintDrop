@@ -11,6 +11,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferInt;
 import java.util.ArrayList;
 
 import javax.swing.JPanel;
@@ -180,12 +181,17 @@ public class Canvas extends JPanel implements MouseListener, MouseMotionListener
 		}
 		
 		/*
+		 * Graphics2D g2d = img.createGraphics();
+g2d.setColor(Color.RED);
+g2d.fillRect(0, 0, img.getWidth(), img.getHeight());
+g2d.dispose();
+		 */
 		for (Pixel[] arr : changedPixels) {
 			for (Pixel pix : arr) {
-				// set pixel HERE
+				pixels.setRGB(pix.getX(), pix.getY(), pix.getColor());
 				
 			}
-		}*/
+		}
 		
 		if (drawSelectRect) {
 			g2d.setStroke(new BasicStroke(2, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER));
