@@ -24,15 +24,13 @@ public class Edit {
 				
 				for (int x_ = 0; x_ < width; x_++) {	
 					for (int y_ = 0; y_ < height; y_++) {
-						if (img.getRGB(x + x_, y + y_) == colorToRemove.getRGB()) {
-							//img.setRGB(x + x_, y + y_, replaceColor.getRGB());
-							// Save PixelsLong[
+						if ((img.getRGB(x + x_, y + y_) & 0xffffff) == (colorToRemove.getRGB() & 0xffffff)) {
+							Pixel pixel = new Pixel(x + x_, y + y_, replaceColor);
+							canvas.setPixelsArr(pixel);
 						}
-						
 					}
 				}
 			}
 		}).start();
 	}
 }
-
