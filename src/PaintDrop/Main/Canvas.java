@@ -20,7 +20,7 @@ public class Canvas extends JPanel implements MouseListener, MouseMotionListener
 	
 	private ArrayList<int[]> positions = new ArrayList<int[]>();
 	private ArrayList<int[]> lines = new ArrayList<int[]>();
-	private ArrayList<Long[]> changedPixels = new ArrayList<Long[]>();
+	private ArrayList<Pixel> changedPixels = new ArrayList<Pixel>();
 	private BufferedImage pixels;
 	private short count = 0;
 	
@@ -45,8 +45,8 @@ public class Canvas extends JPanel implements MouseListener, MouseMotionListener
 		paint(pixels.getGraphics());
 	}
 	
-	public void setPixelsArr(Long[] arr) {
-		changedPixels.add(arr);
+	public void setPixelsArr(Pixel change) {
+		changedPixels.add(change);
 		
 	}
 	
