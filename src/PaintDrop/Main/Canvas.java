@@ -20,7 +20,7 @@ public class Canvas extends JPanel implements MouseListener, MouseMotionListener
 	
 	private ArrayList<int[]> positions = new ArrayList<int[]>();
 	private ArrayList<int[]> lines = new ArrayList<int[]>();
-	private ArrayList<Pixel> changedPixels = new ArrayList<Pixel>();
+	private ArrayList<Pixel[]> changedPixels = new ArrayList<Pixel[]>();
 	private BufferedImage pixels;
 	private short count = 0;
 	
@@ -45,9 +45,8 @@ public class Canvas extends JPanel implements MouseListener, MouseMotionListener
 		paint(pixels.getGraphics());
 	}
 	
-	public void setPixelsArr(Pixel change) {
+	public void setPixelsArr(Pixel[] change) {
 		changedPixels.add(change);
-		
 	}
 	
 	public BufferedImage getPixels() {
@@ -180,6 +179,13 @@ public class Canvas extends JPanel implements MouseListener, MouseMotionListener
 			}
 		}
 		
+		/*
+		for (Pixel[] arr : changedPixels) {
+			for (Pixel pix : arr) {
+				// set pixel HERE
+				
+			}
+		}*/
 		
 		if (drawSelectRect) {
 			g2d.setStroke(new BasicStroke(2, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER));
