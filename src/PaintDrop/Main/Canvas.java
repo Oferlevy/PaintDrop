@@ -23,6 +23,7 @@ public class Canvas extends JPanel implements MouseListener, MouseMotionListener
 	private ArrayList<int[]> lines = new ArrayList<int[]>();
 	private ArrayList<Pixel[]> changedPixels = new ArrayList<Pixel[]>();
 	private BufferedImage pixels;
+	private ArrayList<Rect> filledRects = new ArrayList<Rect>();
 	private short count = 0;
 	
 	Color color = Color.BLUE;
@@ -48,6 +49,10 @@ public class Canvas extends JPanel implements MouseListener, MouseMotionListener
 	
 	public void setPixelsArr(Pixel[] change) {
 		changedPixels.add(change);
+	}
+	
+	public void addFilledRect(Rect rect) {
+		filledRects.add(rect);
 	}
 	
 	public BufferedImage getPixels() {
@@ -186,10 +191,14 @@ g2d.setColor(Color.RED);
 g2d.fillRect(0, 0, img.getWidth(), img.getHeight());
 g2d.dispose();
 		 */
+		g2d.setColor(Color.WHITE);
+		for (Rect rect : filledRects) {
+			g2d.fillRect(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight());
+		}
+		
 		for (Pixel[] arr : changedPixels) {
 			for (Pixel pix : arr) {
 				pixels.setRGB(pix.getX(), pix.getY(), pix.getColor());
-				
 			}
 		}
 		

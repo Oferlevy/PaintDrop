@@ -1,12 +1,12 @@
 package PaintDrop.Main;
 
 public class Pixel {
-    private int x, y;
+    private short x, y;
     private int color;
 
     public Pixel(int x, int y, int color) {
-        this.x = x;
-        this.y = y;
+        this.x = (short)x;
+        this.y = (short)y;
         this.color = color;
     }
 
@@ -23,11 +23,11 @@ public class Pixel {
     }
 
     public void setX(int value) {
-        x = value;
+        x = (short)value;
     }
 
     public void setY(int value) {
-        y = value;
+        y = (short)value;
     }
 
     public void setColor(int value) {
