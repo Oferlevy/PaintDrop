@@ -161,19 +161,6 @@ public class Canvas extends JPanel implements MouseListener, MouseMotionListener
 		g2d.setColor(Color.WHITE);
 		g2d.fillRect(0, 0, size.width,  size.height);
 		
-        g2d.setStroke( new BasicStroke(lineSize, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND) );
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2d.setColor(color);
-        int psize = positions.size();
-        for (int i = 0; i < psize-1; i++) {
-        	int[] np = positions.get(i + 1);
-	        int[] lp = positions.get(i);
-	        g2d.drawLine(lp[0], lp[1], np[0], np[1]);
-        }
-       
-		
-		
-		
 		//Graphics2D g2d = (Graphics2D) pixels.createGraphics();
 		for (int[] line : lines) {
 			g2d.setStroke(new BasicStroke(line[1], BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
@@ -184,6 +171,16 @@ public class Canvas extends JPanel implements MouseListener, MouseMotionListener
 				g2d.drawLine((line[i] & 0xffff), ((line[i] & 0xffff0000) >> 16), (line[i + 1] & 0xffff), ((line[i + 1] & 0xffff0000) >> 16));
 			}
 		}
+		
+		g2d.setStroke( new BasicStroke(lineSize, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND) );
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2d.setColor(color);
+        int psize = positions.size();
+        for (int i = 0; i < psize-1; i++) {
+        	int[] np = positions.get(i + 1);
+	        int[] lp = positions.get(i);
+	        g2d.drawLine(lp[0], lp[1], np[0], np[1]);
+        }
 		
 		/*
 		 * Graphics2D g2d = img.createGraphics();
