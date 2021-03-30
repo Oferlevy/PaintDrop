@@ -108,7 +108,8 @@ public class Canvas extends JPanel implements MouseListener, MouseMotionListener
 				}			
 			}		
 		}else if (SwingUtilities.isRightMouseButton(e)) {
-			removeRects.add(new Rect(x-(lineSize/2),y-(lineSize/2),lineSize,lineSize));
+			int s = lineSize/2;
+			removeRects.add(new Rect(x-s,y-s,lineSize,lineSize));
 			repaint();
 		}
 		
