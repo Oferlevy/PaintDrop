@@ -221,7 +221,9 @@ public class PaintDrop extends JFrame implements MouseListener {
 		if (act == drawMenu) {
 			// show the "draw" panel of the CardLayout above (DrawPanel)
 			cardLayout.show(CardPanel, "draw");
-			edit.getCanvas().drawSelectRect = false;
+			Canvas c = edit.getCanvas();
+			c.drawSelectRect = false;
+			c.repaint();
 		} else if (act == editMenu) {
 			// show the "edit" panel of the CardLayout above (editPanel)
 			System.out.println("edit");

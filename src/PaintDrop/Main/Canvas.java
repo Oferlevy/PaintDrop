@@ -115,6 +115,9 @@ public class Canvas extends JPanel implements MouseListener, MouseMotionListener
 		}
 		
 	}
+	public void drawLinePointes() {
+		
+	}
 	
 	@Override
 	public void mousePressed(MouseEvent e) {
