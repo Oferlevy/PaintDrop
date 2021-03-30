@@ -83,38 +83,30 @@ public class Canvas extends JPanel implements MouseListener, MouseMotionListener
 				}
 				else if (size <= 1) {
 					positions.add(new int[]{ x, y });
-				}
-			}else if (clickPos[0] == 0 && clickPos[1] == 0){ 
+				}	
+			} else if (clickPos[0] == 0 && clickPos[1] == 0){ 
 				// MousePressed does not get called every time so if it does not to that in here
-				clickPos = new int[] {e.getX(), e.getY()};
+				clickPos = new int[] { e.getX(), e.getY() };
 				selectRect[0] = clickPos[0];
 				selectRect[1] = clickPos[1];
-				selectRect[2] = clickPos[0] + 2;
-				selectRect[3] = clickPos[1] + 2;
-			}else {
-				// change the rect adds width and height and rotate the rect if needed
+				selectRect[2] = clickPos[0];
+				selectRect[3] = clickPos[1];
+			} else {
+				// Change the rect adds width and height and rotate the rect if needed
 				int x = e.getX();
 				int y = e.getY();
 				
-				if (x < clickPos[0]) {
-					selectRect[0] = x;
-					selectRect[2] = clickPos[0] - x;
-				}else if (x > clickPos[0]) {
-					selectRect[2] = x - clickPos[0];
-				}
+				// Setting the size of the selected rect
+				selectRect[0] = Math.min(x, clickPos[0]);
+				selectRect[1] = Math.min(y, clickPos[1]);
+				selectRect[2] = Math.abs(x - clickPos[0]);
+				selectRect[3] = Math.abs(y - clickPos[1]);
 				
-				if (y < clickPos[1]) {
-					selectRect[1] = y;
-					selectRect[3] = clickPos[1] - y;
-				}else if (y > clickPos[1]) {
-					selectRect[3] = y - clickPos[1];
-				}
 				repaint();
-				
-			}
-		}
-		
+			}			
+		}		
 	}
+	
 	public void drawLinePointes() {
 		
 	}
