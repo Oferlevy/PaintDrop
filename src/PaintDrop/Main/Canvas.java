@@ -15,6 +15,7 @@ import java.awt.image.DataBufferInt;
 import java.util.ArrayList;
 
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 public class Canvas extends JPanel implements MouseListener, MouseMotionListener {
 	private static final long serialVersionUID = 1L;
@@ -24,6 +25,7 @@ public class Canvas extends JPanel implements MouseListener, MouseMotionListener
 	private ArrayList<Pixel[]> changedPixels = new ArrayList<Pixel[]>();
 	private BufferedImage pixels;
 	private ArrayList<Rect> filledRects = new ArrayList<Rect>();
+	private ArrayList<Rect> removeRects = new ArrayList<Rect>();
 	private short count = 0;
 	
 	Color color = Color.BLUE;
@@ -36,9 +38,7 @@ public class Canvas extends JPanel implements MouseListener, MouseMotionListener
 	public Canvas() {
 		setBackground(Color.WHITE);
 		addMouseListener(this);
-		addMouseMotionListener(this);
-		//System.out.println(getWidth() + " a " + getHeight());
-		
+		addMouseMotionListener(this);	
 	}
 	
 	public void create(Dimension wh) {
@@ -61,50 +61,57 @@ public class Canvas extends JPanel implements MouseListener, MouseMotionListener
 	
 	@Override
 	public void mouseDragged(MouseEvent e) {
-		count++;
-		if (count >= 2) { // counter adds after one time to make the line look better
-			count = 0;
-			if (!drawSelectRect) {
-				int size = positions.size();
-				int x = e.getX();
-				int y = e.getY();
-				
-				// check if the point is not the same as last one and if positions should add the point
-				if (size > 1 && (x != positions.get(size - 1)[0] || y != positions.get(size - 1)[1])) {
-					positions.add(new int[]{ x, y });
+		int x = e.getX();
+		int y = e.getY();
+		if (SwingUtilities.isLeftMouseButton(e)) {
+			
+			count++;
+			if (count >= 2) { // counter adds after one time to make the line look better
+				count = 0;
+				if (!drawSelectRect) {
+					int size = positions.size();
 					
-					//Graphics2D g2d = pixels.createGraphics();
-		            //g2d.setStroke( new BasicStroke(lineSize, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND) );
-		            //g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		            //g2d.setColor(color);
-		            //int[] lp = positions.get(size - 2);
-		            //g2d.drawLine(lp[0], lp[1], x, y);
-		            repaint();
-				}
-				else if (size <= 1) {
-					positions.add(new int[]{ x, y });
-				}	
-			} else if (clickPos[0] == 0 && clickPos[1] == 0){ 
-				// MousePressed does not get called every time so if it does not to that in here
-				clickPos = new int[] { e.getX(), e.getY() };
-				selectRect[0] = clickPos[0];
-				selectRect[1] = clickPos[1];
-				selectRect[2] = clickPos[0];
-				selectRect[3] = clickPos[1];
-			} else {
-				// Change the rect adds width and height and rotate the rect if needed
-				int x = e.getX();
-				int y = e.getY();
-				
-				// Setting the size of the selected rect
-				selectRect[0] = Math.min(x, clickPos[0]);
-				selectRect[1] = Math.min(y, clickPos[1]);
-				selectRect[2] = Math.abs(x - clickPos[0]);
-				selectRect[3] = Math.abs(y - clickPos[1]);
-				
-				repaint();
-			}			
-		}		
+					
+					// check if the point is not the same as last one and if positions should add the point
+					if (size > 1 && (x != positions.get(size - 1)[0] || y != positions.get(size - 1)[1])) {
+						positions.add(new int[]{ x, y });
+						
+						//Graphics2D g2d = pixels.createGraphics();
+			            //g2d.setStroke( new BasicStroke(lineSize, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND) );
+			            //g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+			            //g2d.setColor(color);
+			            //int[] lp = positions.get(size - 2);
+			            //g2d.drawLine(lp[0], lp[1], x, y);
+			            repaint();
+					}
+					else if (size <= 1) {
+						positions.add(new int[]{ x, y });
+					}	
+				} else if (clickPos[0] == 0 && clickPos[1] == 0){ 
+					// MousePressed does not get called every time so if it does not to that in here
+					clickPos = new int[] { e.getX(), e.getY() };
+					selectRect[0] = clickPos[0];
+					selectRect[1] = clickPos[1];
+					selectRect[2] = clickPos[0];
+					selectRect[3] = clickPos[1];
+				} else {
+					// Change the rect adds width and height and rotate the rect if needed
+					
+					
+					// Setting the size of the selected rect
+					selectRect[0] = Math.min(x, clickPos[0]);
+					selectRect[1] = Math.min(y, clickPos[1]);
+					selectRect[2] = Math.abs(x - clickPos[0]);
+					selectRect[3] = Math.abs(y - clickPos[1]);
+					
+					repaint();
+				}			
+			}		
+		}else if (SwingUtilities.isRightMouseButton(e)) {
+			removeRects.add(new Rect(x-(lineSize/2),y-(lineSize/2),lineSize,lineSize));
+			repaint();
+		}
+		
 	}
 	
 	public void drawLinePointes() {
@@ -192,6 +199,11 @@ g2d.dispose();
 			for (Pixel pix : arr) {
 				pixels.setRGB(pix.getX(), pix.getY(), pix.getColor());
 			}
+		}
+		
+		g2d.setColor(Color.WHITE);
+		for (Rect remove : removeRects) {
+			g2d.fillRect(remove.getX(), remove.getY(), remove.getWidth(), remove.getHeight());
 		}
 		
 		if (drawSelectRect) {
